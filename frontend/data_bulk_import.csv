@@ -1,0 +1,59 @@
+Id,CategoryId,Name,Brand,Price,OriginalPrice,ImageUrl
+SP_KB_001,1,Bàn phím cơ Keychron K8 Pro,Keychron,1850000,2200000,https://placehold.co/400x400/png
+SP_KB_002,1,Bàn phím cơ Akko 3098B Multi-modes,Akko,1650000,1950000,https://placehold.co/400x400/png
+SP_KB_003,1,Bàn phím cơ Logitech MX Mechanical,Logitech,3200000,3500000,https://placehold.co/400x400/png
+SP_KB_004,1,Bàn phím cơ Razer BlackWidow V3,Razer,2800000,3200000,https://placehold.co/400x400/png
+SP_KB_005,1,Bàn phím cơ Corsair K70 RGB PRO,Corsair,3500000,4000000,https://placehold.co/400x400/png
+SP_KB_006,1,Bàn phím cơ Epomaker TH80 Pro,Epomaker,1950000,2300000,https://placehold.co/400x400/png
+SP_KB_007,1,Bàn phím cơ FL-Esports CMK87,FL-Esports,2100000,2500000,https://placehold.co/400x400/png
+SP_KB_008,1,Bàn phím cơ NuPhy Air75 V2,NuPhy,2600000,2900000,https://placehold.co/400x400/png
+SP_KB_009,1,Bàn phím cơ Leopold FC750R,Leopold,3100000,3400000,https://placehold.co/400x400/png
+SP_KB_010,1,Bàn phím cơ RK84 Wireless,Royal Kludge,950000,1200000,https://placehold.co/400x400/png
+SP_KB_011,1,Bàn phím cơ Keychron Q1 Pro,Keychron,4500000,4900000,https://placehold.co/400x400/png
+SP_KB_012,1,Bàn phím cơ SteelSeries Apex Pro TKL,SteelSeries,4200000,4800000,https://placehold.co/400x400/png
+SP_KB_013,1,Bàn phím cơ DareU EK87,DareU,450000,600000,https://placehold.co/400x400/png
+SP_KB_014,1,Bàn phím cơ E-Dra EK387,E-Dra,550000,700000,https://placehold.co/400x400/png
+SP_KB_015,1,Bàn phím cơ Akko 5075B Plus,Akko,1800000,2100000,https://placehold.co/400x400/png
+SP_MS_001,2,Chuột không dây Logitech MX Master 3S,Logitech,2450000,2800000,https://placehold.co/400x400/png
+SP_MS_002,2,Chuột gaming Razer DeathAdder V3 Pro,Razer,3100000,3500000,https://placehold.co/400x400/png
+SP_MS_003,2,Chuột gaming Logitech G Pro X Superlight,Logitech,2850000,3200000,https://placehold.co/400x400/png
+SP_MS_004,2,Chuột không dây Keychron M3,Keychron,990000,1200000,https://placehold.co/400x400/png
+SP_MS_005,2,Chuột gaming Corsair Sabre RGB Pro,Corsair,1200000,1500000,https://placehold.co/400x400/png
+SP_MS_006,2,Chuột gaming Zowie EC2-C,Zowie,1650000,1900000,https://placehold.co/400x400/png
+SP_MS_007,2,Chuột gaming SteelSeries Prime Wireless,SteelSeries,1900000,2300000,https://placehold.co/400x400/png
+SP_MS_008,2,Chuột Bluetooth Microsoft Ergonomic,Microsoft,1100000,1400000,https://placehold.co/400x400/png
+SP_MS_009,2,Chuột gaming Asus ROG Gladius III,Asus,1800000,2100000,https://placehold.co/400x400/png
+SP_MS_010,2,Chuột gaming Fuhlen G90,Fuhlen,350000,450000,https://placehold.co/400x400/png
+SP_DC_001,2,Bảng Pegboard IKEA Skadis Trắng,IKEA,550000,650000,https://placehold.co/400x400/png
+SP_DC_002,2,Giá đỡ màn hình Human Motion T6,Human Motion,750000,950000,https://placehold.co/400x400/png
+SP_DC_003,2,Giá đỡ màn hình North Bayou F80,North Bayou,350000,450000,https://placehold.co/400x400/png
+SP_DC_004,2,Kệ để bàn phím bằng gỗ óc chó,Handmade,450000,550000,https://placehold.co/400x400/png
+SP_DC_005,2,Kê tay bàn phím gỗ hồ đào,Keychron,350000,450000,https://placehold.co/400x400/png
+SP_DC_006,2,Giá đỡ tai nghe Baseus có sạc không dây,Baseus,650000,800000,https://placehold.co/400x400/png
+SP_DC_007,2,Thảm trải bàn da PU cỡ lớn,HyperWork,250000,350000,https://placehold.co/400x400/png
+SP_DC_008,2,Đồng hồ LED để bàn phong cách Cyberpunk,Divoom,1500000,1800000,https://placehold.co/400x400/png
+SP_DC_009,2,Chậu cây trang trí góc máy giả cổ,Decor,150000,200000,https://placehold.co/400x400/png
+SP_DC_010,2,Giá đỡ Laptop bằng nhôm tản nhiệt,Ugreen,450000,600000,https://placehold.co/400x400/png
+SP_LT_001,3,Đèn treo màn hình Baseus i-Wok Pro,Baseus,550000,750000,https://placehold.co/400x400/png
+SP_LT_002,3,Đèn treo màn hình Xiaomi Mijia Lite,Xiaomi,850000,1050000,https://placehold.co/400x400/png
+SP_LT_003,3,Đèn LED RGB dán cạnh bàn Yeelight,Yeelight,750000,900000,https://placehold.co/400x400/png
+SP_LT_004,3,Đèn bàn chống cận Philips Hue,Philips,1200000,1500000,https://placehold.co/400x400/png
+SP_LT_005,3,Đèn LED lục giác Nanoleaf Shapes,Nanoleaf,4500000,5200000,https://placehold.co/400x400/png
+SP_LT_006,3,Đèn nền TV Ambilight Govee,Govee,1600000,1900000,https://placehold.co/400x400/png
+SP_LT_007,3,Đèn ngủ thông minh Xiaomi Bedside Lamp 2,Xiaomi,850000,1100000,https://placehold.co/400x400/png
+SP_LT_008,3,Dải LED Neon uốn chữ tự do,Yeelight,1100000,1300000,https://placehold.co/400x400/png
+SP_LT_009,3,Đèn chiếu sao phi hành gia Decor,OEM,250000,350000,https://placehold.co/400x400/png
+SP_LT_010,3,Đèn cây đứng đổi màu góc phòng RGB,Govee,1800000,2200000,https://placehold.co/400x400/png
+SP_AU_001,2,Loa Bluetooth Marshall Stanmore III,Marshall,8500000,9500000,https://placehold.co/400x400/png
+SP_AU_002,2,Loa Bluetooth Marshall Acton III,Marshall,6500000,7200000,https://placehold.co/400x400/png
+SP_AU_003,2,Loa máy tính Edifier R1700BT,Edifier,2500000,2800000,https://placehold.co/400x400/png
+SP_AU_004,2,Loa máy tính Edifier MR4,Edifier,1800000,2100000,https://placehold.co/400x400/png
+SP_AU_005,2,Tai nghe chống ồn Sony WH-1000XM5,Sony,6800000,7500000,https://placehold.co/400x400/png
+SP_AU_006,2,Tai nghe kiểm âm Audio-Technica M50x,Audio-Technica,3500000,4000000,https://placehold.co/400x400/png
+SP_AU_007,2,Tai nghe gaming HyperX Cloud III,HyperX,2200000,2600000,https://placehold.co/400x400/png
+SP_AU_008,2,Tai nghe gaming Logitech G733 LightSpeed,Logitech,2900000,3400000,https://placehold.co/400x400/png
+SP_AU_009,2,Loa Soundbar Sony HT-S400,Sony,4500000,5200000,https://placehold.co/400x400/png
+SP_AU_010,2,Loa Bluetooth JBL Charge 5,JBL,3200000,3600000,https://placehold.co/400x400/png
+SP_AU_011,2,Tai nghe True Wireless AirPods Pro 2,Apple,5500000,6000000,https://placehold.co/400x400/png
+SP_AU_012,2,Micro thu âm HyperX QuadCast S,HyperX,3800000,4300000,https://placehold.co/400x400/png
+SP_AU_013,2,Micro thu âm Rode NT-USB Mini,Rode,2600000,3000000,https://placehold.co/400x400/png

@@ -1,0 +1,12 @@
+/Users/thaochie/DACN/backend/AuraShop.Data/bin/Debug/net9.0/AuraShop.Data.deps.json
+/Users/thaochie/DACN/backend/AuraShop.Data/bin/Debug/net9.0/AuraShop.Data.dll
+/Users/thaochie/DACN/backend/AuraShop.Data/bin/Debug/net9.0/AuraShop.Data.pdb
+/Users/thaochie/DACN/backend/AuraShop.Data/obj/Debug/net9.0/AuraShop.Data.csproj.AssemblyReference.cache
+/Users/thaochie/DACN/backend/AuraShop.Data/obj/Debug/net9.0/AuraShop.Data.GeneratedMSBuildEditorConfig.editorconfig
+/Users/thaochie/DACN/backend/AuraShop.Data/obj/Debug/net9.0/AuraShop.Data.AssemblyInfoInputs.cache
+/Users/thaochie/DACN/backend/AuraShop.Data/obj/Debug/net9.0/AuraShop.Data.AssemblyInfo.cs
+/Users/thaochie/DACN/backend/AuraShop.Data/obj/Debug/net9.0/AuraShop.Data.csproj.CoreCompileInputs.cache
+/Users/thaochie/DACN/backend/AuraShop.Data/obj/Debug/net9.0/AuraShop.Data.dll
+/Users/thaochie/DACN/backend/AuraShop.Data/obj/Debug/net9.0/refint/AuraShop.Data.dll
+/Users/thaochie/DACN/backend/AuraShop.Data/obj/Debug/net9.0/AuraShop.Data.pdb
+/Users/thaochie/DACN/backend/AuraShop.Data/obj/Debug/net9.0/ref/AuraShop.Data.dll

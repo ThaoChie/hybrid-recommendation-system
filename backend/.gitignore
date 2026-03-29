@@ -1,0 +1,46 @@
+# ==========================================
+# THƯ MỤC BUILD CỦA .NET 
+# ==========================================
+[Bb]in/
+[Oo]bj/
+
+# ==========================================
+# VISUAL STUDIO & VS CODE
+# ==========================================
+.vs/
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.user
+*.suo
+*.dbmdl
+*.jfm
+*.pncgui
+
+# ==========================================
+# HỆ ĐIỀU HÀNH (MAC & WINDOWS)
+# ==========================================
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ==========================================
+# LOGS & CACHE
+# ==========================================
+*.log
+*.cache
+*.tmp
+
+# ==========================================
+# BẢO MẬT (SECRETS)
+# ==========================================
+
+appsettings.Development.json
+*.env
+secrets.json

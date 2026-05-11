@@ -27,5 +27,11 @@ export const productService = {
   trackAction: async (type: 'view' | 'cart' | 'search', data: any) => {
     const response = await apiClient.post(`/tracking/${type}`, data);
     return response.data;
+  }, // <=== ĐÃ THÊM DẤU PHẨY Ở ĐÂY ĐỂ FIX LỖI
+
+  // 5. API Gọi AI Gợi ý sản phẩm tương tự
+  getRecommendations: async (id: string) => {
+    const response = await apiClient.get(`/products/${id}/recommendations`);
+    return response.data;
   }
 };

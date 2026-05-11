@@ -3,7 +3,8 @@ import { useParams, Link, useNavigate } from "react-router";
 import { Star, ShieldCheck, Truck, RotateCcw, Cpu, ShoppingCart, CreditCard } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { productService } from "../../services/product.service";
-import apiClient from "../../services/apiClient"; // Import để gọi trực tiếp các API tracking/checkout
+import apiClient from "../../services/apiClient"; 
+import { ProductCard, ProductDto } from '../components/ProductCard';
 
 export function ProductDetail() {
   const { id } = useParams<{ id: string }>();
@@ -14,23 +15,32 @@ export function ProductDetail() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
+  const [recommendations, setRecommendations] = useState<ProductDto[]>([]);
 
   useEffect(() => {
     const fetchProduct = async () => {
       if (!id) return;
       try {
         setIsLoading(true);
+        // 1. Lấy thông tin sản phẩm chính
         const data = await productService.getProductById(id);
         setProduct(data);
 
-        // --- TRACKING: Ghi nhận hành vi XEM sản phẩm cho AI ---
-        if (id) {
-          apiClient.post('/tracking/view', {
-            productId: id,
-            userId: user?.id || "",
-            sessionId: "session_temp_123" 
-          }).catch(err => console.error("Tracking view error:", err));
+        // 2. Kéo danh sách gợi ý từ AI về (Bọc trong try-catch riêng để nếu AI sập thì web vẫn không bị lỗi)
+        try {
+          const recData = await productService.getRecommendations(id);
+          setRecommendations(recData);
+        } catch (recErr) {
+          console.error("Lỗi khi tải AI recommendations:", recErr);
         }
+
+        // --- TRACKING: Ghi nhận hành vi XEM sản phẩm cho AI ---
+        apiClient.post('/tracking/view', {
+          productId: id,
+          userId: user?.id || "",
+          sessionId: "session_temp_123" 
+        }).catch(err => console.error("Tracking view error:", err));
+
       } catch (err: any) {
         console.error("Lỗi:", err);
         setError("Không tìm thấy sản phẩm hoặc có lỗi xảy ra.");
@@ -40,6 +50,10 @@ export function ProductDetail() {
     };
 
     fetchProduct();
+    
+    // Mỗi khi ID thay đổi (người dùng click vào SP gợi ý), tự động cuộn lên đầu trang
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
   }, [id, user?.id]);
 
   // LUỒNG 1: THÊM VÀO GIỎ (Ghi nhận hành vi quan tâm cho AI)
@@ -111,13 +125,15 @@ export function ProductDetail() {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      {/* Breadcrumb */}
       <div className="text-sm text-gray-500 mb-6">
         <Link to="/" className="hover:text-blue-800">Trang chủ</Link>
         <span className="mx-2">/</span>
         <span className="text-gray-900">{product.name}</span>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+      {/* Chi tiết sản phẩm */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">
         <div className="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm flex items-center justify-center">
           <img 
             src={product.imageUrl} 
@@ -161,7 +177,7 @@ export function ProductDetail() {
             </div>
           </div>
 
-          {/* Cụm nút hành động mới */}
+          {/* Cụm nút hành động */}
           <div className="flex flex-col sm:flex-row gap-4 mb-8">
             <button 
               onClick={handleBuyNow}
@@ -200,6 +216,30 @@ export function ProductDetail() {
           </div>
         </div>
       </div>
+
+      {/* ========================================================= */}
+      {/* KHU VỰC AI GỢI Ý: HIỂN THỊ NẾU CÓ DỮ LIỆU */}
+      {/* ========================================================= */}
+      {recommendations.length > 0 && (
+        <div className="mt-12 border-t border-gray-200 pt-12">
+          <div className="flex items-center gap-3 mb-8">
+            <h2 className="text-2xl font-bold text-gray-900">
+              Có thể bạn sẽ thích
+            </h2>
+            <span className="bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1 shadow-sm">
+              ✨ AI Gợi ý
+            </span>
+          </div>
+          
+          {/* Lưới Grid hiển thị sản phẩm */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {recommendations.map(rec => (
+              <ProductCard key={rec.id} product={rec} />
+            ))}
+          </div>
+        </div>
+      )}
+      
     </div>
   );
 }

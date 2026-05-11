@@ -1,0 +1,66 @@
+version: '3.9'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: aurashop_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: thaochie
+      MYSQL_DATABASE: DACN             
+      MYSQL_USER: thaochie
+      MYSQL_PASSWORD: thaochie
+      # Bổ sung cấu hình để MySQL hiểu Tiếng Việt chuẩn xác
+      MYSQL_CHARSET: utf8mb4
+      MYSQL_COLLATION: utf8mb4_unicode_ci
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-authentication-plugin=mysql_native_password
+    # "Vũ khí" 1: Báo hiệu cho các service khác biết khi nào DB thực sự khởi động xong
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "thaochie", "-pthaochie"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  ai-service:
+    build: 
+      context: ./model
+    container_name: aurashop_ai
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_USER=thaochie
+      - DB_PASSWORD=thaochie
+      - DB_NAME=DACN
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: AuraShop.API/Dockerfile
+    container_name: aurashop_backend
+    ports:
+      - "5151:5151"
+    depends_on:
+      db:
+        condition: service_healthy # Chỉ chạy khi DB đã khỏe mạnh
+    environment:
+      # "Vũ khí" 2: Thêm CharSet, AllowPublicKeyRetrieval và SslMode để tránh văng lỗi Pomelo MySQL
+      - ConnectionStrings__DefaultConnection=Server=db;Port=3306;Database=DACN;Uid=thaochie;Pwd=thaochie;CharSet=utf8mb4;AllowPublicKeyRetrieval=true;SslMode=None;
+      - AIService__BaseUrl=http://ai-service:8000
+      - ASPNETCORE_HTTP_PORTS=5151
+      - ASPNETCORE_ENVIRONMENT=Development
+
+volumes:
+  mysql_data:

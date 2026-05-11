@@ -3681,6 +3681,7 @@
       "AuraShop.Core >= 1.0.0",
       "AuraShop.Data >= 1.0.0",
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 9.0.0",
+      "Microsoft.EntityFrameworkCore >= 9.0.0",
       "Microsoft.EntityFrameworkCore.Design >= 9.0.0",
       "Swashbuckle.AspNetCore >= 10.1.5"
     ]
@@ -3691,11 +3692,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/thaochie/DACN/backend/AuraShop.API/AuraShop.API.csproj",
+      "projectUniqueName": "/Users/thaochie/Documents/DACN/backend/AuraShop.API/AuraShop.API.csproj",
       "projectName": "AuraShop.API",
-      "projectPath": "/Users/thaochie/DACN/backend/AuraShop.API/AuraShop.API.csproj",
+      "projectPath": "/Users/thaochie/Documents/DACN/backend/AuraShop.API/AuraShop.API.csproj",
       "packagesPath": "/Users/thaochie/.nuget/packages/",
-      "outputPath": "/Users/thaochie/DACN/backend/AuraShop.API/obj/",
+      "outputPath": "/Users/thaochie/Documents/DACN/backend/AuraShop.API/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/thaochie/.nuget/NuGet/NuGet.Config"
@@ -3704,18 +3705,17 @@
         "net9.0"
       ],
       "sources": {
-        "/usr/local/share/dotnet/library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "/Users/thaochie/DACN/backend/AuraShop.Core/AuraShop.Core.csproj": {
-              "projectPath": "/Users/thaochie/DACN/backend/AuraShop.Core/AuraShop.Core.csproj"
+            "/Users/thaochie/Documents/DACN/backend/AuraShop.Core/AuraShop.Core.csproj": {
+              "projectPath": "/Users/thaochie/Documents/DACN/backend/AuraShop.Core/AuraShop.Core.csproj"
             },
-            "/Users/thaochie/DACN/backend/AuraShop.Data/AuraShop.Data.csproj": {
-              "projectPath": "/Users/thaochie/DACN/backend/AuraShop.Data/AuraShop.Data.csproj"
+            "/Users/thaochie/Documents/DACN/backend/AuraShop.Data/AuraShop.Data.csproj": {
+              "projectPath": "/Users/thaochie/Documents/DACN/backend/AuraShop.Data/AuraShop.Data.csproj"
             }
           }
         }
@@ -3730,13 +3730,17 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.300"
+      "SdkAnalysisLevel": "10.0.200"
     },
     "frameworks": {
       "net9.0": {
         "targetAlias": "net9.0",
         "dependencies": {
           "Microsoft.AspNetCore.Authentication.JwtBearer": {
+            "target": "Package",
+            "version": "[9.0.0, )"
+          },
+          "Microsoft.EntityFrameworkCore": {
             "target": "Package",
             "version": "[9.0.0, )"
           },
@@ -3770,7 +3774,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.305/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.203/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

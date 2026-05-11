@@ -24,7 +24,7 @@ export function Home() {
         setProducts(res.data);
         
         // Cập nhật tổng số trang từ Backend trả về
-        // (Lưu ý: Nếu Backend của bạn đặt tên khác như totalPage, hãy sửa lại cho khớp nhé)
+        // (Lưu ý: kiểm tra lại cấu trúc dữ liệu trả về của API, có thể là res.totalPages hoặc res.meta.totalPages)
         setTotalPages(res.totalPages || 1); 
       } catch (err) {
         console.error(err);

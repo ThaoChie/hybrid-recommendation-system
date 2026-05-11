@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "p0dMa39TRPY=",
+  "dgSpecHash": "DW2GmiXUyJs=",
   "success": true,
-  "projectFilePath": "/Users/thaochie/DACN/backend/AuraShop.Data/AuraShop.Data.csproj",
+  "projectFilePath": "/Users/thaochie/Documents/DACN/backend/AuraShop.Data/AuraShop.Data.csproj",
   "expectedPackageFiles": [
     "/Users/thaochie/.nuget/packages/microsoft.entityframeworkcore/9.0.0/microsoft.entityframeworkcore.9.0.0.nupkg.sha512",
     "/Users/thaochie/.nuget/packages/microsoft.entityframeworkcore.abstractions/9.0.0/microsoft.entityframeworkcore.abstractions.9.0.0.nupkg.sha512",

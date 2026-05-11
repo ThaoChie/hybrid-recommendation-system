@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "xw5LHthw+dM=",
+  "dgSpecHash": "qmf/RgGj47w=",
   "success": true,
-  "projectFilePath": "/Users/thaochie/DACN/backend/AuraShop.Core/AuraShop.Core.csproj",
+  "projectFilePath": "/Users/thaochie/Documents/DACN/backend/AuraShop.Core/AuraShop.Core.csproj",
   "expectedPackageFiles": [
     "/Users/thaochie/.nuget/packages/bcrypt.net-next/4.1.0/bcrypt.net-next.4.1.0.nupkg.sha512",
     "/Users/thaochie/.nuget/packages/csvhelper/33.1.0/csvhelper.33.1.0.nupkg.sha512",

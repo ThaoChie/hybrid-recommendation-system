@@ -1,96 +1,111 @@
+using AuraShop.Core.Interfaces;
+using AuraShop.Core.Services;
 using AuraShop.Data.Context;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
+using System.Net.Http;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. Thêm dịch vụ Controllers
+// ===== 1. CONTROLLERS & SWAGGER =====
 builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddHttpClient();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new() { Title = "AuraShop API", Version = "v1" });
+});
 
-// 2. Cấu hình kết nối MySQL
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+// ===== 2. DATABASE CONFIGURATION (Sử dụng AppDbContext) =====
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+{
+    options.UseMySql(
+        connectionString,
+        ServerVersion.AutoDetect(connectionString),
+        mySqlOptions =>
+        {
+            // Tự động retry nếu kết nối chập chờn
+            mySqlOptions.EnableRetryOnFailure(
+                maxRetryCount: 5,
+                maxRetryDelay: TimeSpan.FromSeconds(10),
+                errorNumbersToAdd: null
+            );
+            mySqlOptions.CommandTimeout(60);
+        }
+    );
 
-// 3. Cấu hình CORS (Cho phép React gọi API)
+    if (builder.Environment.IsDevelopment())
+    {
+        options.EnableSensitiveDataLogging().EnableDetailedErrors();
+    }
+});
+
+// ===== 3. CORS POLICY =====
+var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>()
+    ?? ["http://localhost:5173", "http://localhost:3000"];
+
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowReactApp", policy =>
+    options.AddPolicy("AuraShopPolicy", policy =>
     {
-        policy.WithOrigins("http://localhost:5173")
+        policy.WithOrigins(allowedOrigins)
+              .AllowAnyMethod()
               .AllowAnyHeader()
-              .AllowAnyMethod();
+              .AllowCredentials(); // Hỗ trợ gửi cookie/token nếu cần
     });
 });
 
-// 4. Cấu hình JWT Authentication
-var jwtSettings = builder.Configuration.GetSection("Jwt");
-builder.Services.AddAuthentication(options =>
+// ===== 4. HTTP CLIENT CHO AI SERVICE =====
+var aiServiceUrl = builder.Configuration["AiService:BaseUrl"] ?? "http://localhost:8000";
+builder.Services.AddHttpClient("AiService", client =>
 {
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-.AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = jwtSettings["Issuer"],
-        ValidAudience = jwtSettings["Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]!))
-    };
+    client.BaseAddress = new Uri(aiServiceUrl);
+    client.Timeout = TimeSpan.FromSeconds(15);
 });
 
-// 5. Cấu hình Swagger truyền thống
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+// ===== 5. DEPENDENCY INJECTION (DI) =====
+builder.Services.AddHttpClient<IProductService, ProductService>();
+builder.Services.AddScoped<IRecommendationService, RecommendationService>();
+builder.Services.AddScoped<ITrackingService, TrackingService>();
+builder.Services.AddScoped<IAuthService, AuthService>(); 
 
-// 6. Đăng ký các Services (Dependency Injection)
-builder.Services.AddScoped<AuraShop.Core.Interfaces.ITrackingService, AuraShop.Core.Services.TrackingService>();
-builder.Services.AddScoped<AuraShop.Core.Interfaces.IProductService, AuraShop.Core.Services.ProductService>();
-builder.Services.AddScoped<AuraShop.Core.Interfaces.IAuthService, AuraShop.Core.Services.AuthService>();
-
+// ==========================================
+// BUILD APP
+// ==========================================
 var app = builder.Build();
 
-// =================================================================
-// 7. KÍCH HOẠT TỰ ĐỘNG BƠM DỮ LIỆU (SEEDER) LÚC KHỞI ĐỘNG
-// =================================================================
+// ===== 6. KHỞI TẠO DATABASE  =====
 using (var scope = app.Services.CreateScope())
 {
-    var services = scope.ServiceProvider;
-    try
-    {
-        // Gọi hàm tạo Danh mục (Categories) nếu DB đang trống
-        await AuraShop.Data.Context.DatabaseSeeder.SeedDataAsync(services);
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"Lỗi khi bơm dữ liệu: {ex.Message}");
-    }
+    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+    await DatabaseInitializer.InitializeAsync(scope.ServiceProvider, logger);
 }
 
-// 8. Cấu hình Pipeline (Thứ tự rất quan trọng)
+// ===== 7. MIDDLEWARE PIPELINE =====
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "AuraShop API v1");
+    });
 }
+
+app.UseCors("AuraShopPolicy");
 
 app.UseHttpsRedirection();
 
-// Bật CORS (Bắt buộc đứng trước Authentication)
-app.UseCors("AllowReactApp");
-
-// Xác thực và phân quyền
-app.UseAuthentication();
 app.UseAuthorization();
 
-// Map các endpoint
 app.MapControllers();
+
+app.MapGet("/health", () => Results.Ok(new
+{
+    status = "healthy",
+    timestamp = DateTime.UtcNow,
+    version = "1.0.0"
+}));
 
 app.Run();

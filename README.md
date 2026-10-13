@@ -2,8 +2,6 @@
 
 Dự án Hệ thống Thương mại Điện tử gợi ý sản phẩm thông minh (Content-Based Filtering + Popularity Scoring).
 
-Vì yêu cầu phần **AI Model** chạy trực tiếp trên máy thật (không dùng Docker để tránh nặng máy), hướng dẫn này được thiết kế **từ con số 0** cho một máy tính mới hoàn toàn, chỉ có VS Code và Docker Desktop.
-
 ---
 
 ## KIẾN TRÚC HỆ THỐNG

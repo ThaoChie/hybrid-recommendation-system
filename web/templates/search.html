@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load price_format %}
+{% block title %}Tìm: {{ query }} - AuraShop{% endblock %}
+{% block content %}
+{% if query %}<h1 class="text-xl font-semibold mb-4">Kết quả cho "<span class="text-indigo-600">{{ query }}</span>" ({{ results|length }})</h1>{% endif %}
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+    {% for p in results %}
+    <a href="/product/{{ p.id }}/" onclick="app().track('{{ p.id }}','View','{{ query }}')" class="bg-white rounded-xl shadow-sm hover:shadow-md transition overflow-hidden group">
+        <div class="aspect-square bg-gray-100 overflow-hidden">
+            {% if p.image_url %}<img src="{{ p.image_url }}" class="w-full h-full object-cover group-hover:scale-105 transition" loading="lazy" onerror="this.src='https://placehold.co/300?text=No+Img'">{% endif %}
+        </div>
+        <div class="p-3">
+            <h3 class="text-sm font-medium line-clamp-2 mb-1">{{ p.name }}</h3>
+            <span class="text-red-600 font-bold">{{ p.price|vnd }}₫</span>
+            <div class="text-xs text-yellow-500 mt-1">★ {{ p.rating }}</div>
+        </div>
+    </a>
+    {% empty %}
+    <p class="col-span-full text-center text-gray-500 py-12">{% if query %}Không tìm thấy kết quả.{% else %}Nhập từ khóa để tìm kiếm.{% endif %}</p>
+    {% endfor %}
+</div>
+{% endblock %}

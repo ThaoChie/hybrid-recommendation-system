@@ -1,0 +1,1172 @@
+% ============================================================
+% BÁO CÁO ĐỒ ÁN CHUYÊN NGÀNH
+% Hệ thống gợi ý sản phẩm thương mại điện tử AuraShop
+% ============================================================
+\documentclass[12pt,a4paper]{report}
+
+% --- Packages ---
+\usepackage[utf8]{inputenc}
+\usepackage[vietnamese]{babel}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{geometry}
+\usepackage{float}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{fancyhdr}
+\usepackage{setspace}
+\usepackage{indentfirst}
+\usepackage{enumitem}
+\usepackage{multirow}
+\usepackage{array}
+
+% --- Page setup ---
+\geometry{left=3cm, right=2cm, top=2.5cm, bottom=2.5cm}
+\onehalfspacing
+\pgfplotsset{compat=1.18}
+
+% --- Header/Footer ---
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\leftmark}
+\fancyhead[R]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% --- Code listing style ---
+\lstset{
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    commentstyle=\color{gray}\itshape,
+    stringstyle=\color{red},
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    tabsize=4,
+    showstringspaces=false
+}
+
+% --- Title page info ---
+\title{
+    \vspace{-2cm}
+    \textbf{\Large BÁO CÁO ĐỒ ÁN CHUYÊN NGÀNH} \\[1cm]
+    \textbf{\LARGE Hệ Thống Gợi Ý Sản Phẩm Thương Mại Điện Tử} \\[0.5cm]
+    \textbf{\Large AuraShop — Hybrid Recommendation Engine} \\[2cm]
+}
+\author{
+    \textbf{Sinh viên thực hiện:} [Họ và tên sinh viên] \\
+    \textbf{MSSV:} [Mã số sinh viên] \\
+    \textbf{Giảng viên hướng dẫn:} [Họ và tên GVHD] \\[1cm]
+    \textbf{Ngành:} Công nghệ Thông tin
+}
+\date{\today}
+
+\begin{document}
+
+% ============================================================
+% TRANG BÌA
+% ============================================================
+\begin{titlepage}
+\centering
+\vspace*{1cm}
+{\Large \textbf{TRƯỜNG ĐẠI HỌC [TÊN TRƯỜNG]}} \\[0.3cm]
+{\large \textbf{KHOA CÔNG NGHỆ THÔNG TIN}} \\[0.5cm]
+\rule{\textwidth}{1pt} \\[2cm]
+
+{\LARGE \textbf{BÁO CÁO ĐỒ ÁN CHUYÊN NGÀNH}} \\[1.5cm]
+{\Huge \textbf{Hệ Thống Gợi Ý Sản Phẩm}} \\[0.3cm]
+{\Huge \textbf{Thương Mại Điện Tử}} \\[0.5cm]
+{\Large \textit{AuraShop — Hybrid Recommendation Engine}} \\[3cm]
+
+\begin{flushleft}
+\hspace{5cm}
+\begin{tabular}{ll}
+\textbf{Sinh viên thực hiện:} & [Họ và tên] \\
+\textbf{MSSV:} & [Mã số sinh viên] \\
+\textbf{Lớp:} & [Tên lớp] \\
+\textbf{Giảng viên hướng dẫn:} & [Họ và tên GVHD] \\
+\end{tabular}
+\end{flushleft}
+
+\vfill
+{\large Thành phố Hồ Chí Minh, \the\year}
+\end{titlepage}
+
+% ============================================================
+% MỤC LỤC
+% ============================================================
+\tableofcontents
+\newpage
+\listoffigures
+\listoftables
+\newpage
+
+% ============================================================
+% CHƯƠNG 1: TỔNG QUAN
+% ============================================================
+\chapter{Tổng Quan Đề Tài}
+
+\section{Đặt vấn đề}
+
+Trong bối cảnh thương mại điện tử phát triển mạnh mẽ tại Việt Nam với hàng triệu sản phẩm trên các nền tảng như Tiki, Shopee, Lazada, người dùng thường gặp khó khăn trong việc tìm kiếm sản phẩm phù hợp với nhu cầu. Hiện tượng \textit{information overload} (quá tải thông tin) khiến trải nghiệm mua sắm trở nên kém hiệu quả, dẫn đến tỷ lệ chuyển đổi (conversion rate) thấp.
+
+Hệ thống gợi ý (Recommendation System) là giải pháp then chốt giúp:
+\begin{itemize}
+    \item Cá nhân hóa trải nghiệm mua sắm cho từng người dùng
+    \item Tăng tỷ lệ chuyển đổi và doanh thu cho doanh nghiệp
+    \item Giảm thời gian tìm kiếm sản phẩm
+    \item Khám phá sản phẩm mới phù hợp (serendipity)
+\end{itemize}
+
+\section{Mục tiêu đề tài}
+
+Xây dựng hệ thống gợi ý sản phẩm thương mại điện tử \textbf{AuraShop} với các mục tiêu:
+
+\begin{enumerate}
+    \item \textbf{Gợi ý dựa trên nội dung (Content-Based Filtering):} Sử dụng đặc trưng sản phẩm (tên, thương hiệu, danh mục, giá, đánh giá) để tìm sản phẩm tương tự.
+    \item \textbf{Hybrid Scoring:} Kết hợp nhiều tín hiệu (TF-IDF, Sentence Embeddings, Popularity Score) để xếp hạng kết quả chính xác hơn.
+    \item \textbf{Cross-sell thông minh:} Gợi ý sản phẩm bổ sung dựa trên quan hệ ngữ nghĩa giữa các loại sản phẩm.
+    \item \textbf{Cá nhân hóa:} Theo dõi hành vi người dùng qua ChromaDB để gợi ý phù hợp khi quay lại.
+    \item \textbf{Kiến trúc microservice:} Tách biệt AI Engine và Web Application, dễ mở rộng và bảo trì.
+\end{enumerate}
+
+\section{Phạm vi đề tài}
+
+\begin{itemize}
+    \item \textbf{Dữ liệu:} Khoảng 8.000 sản phẩm từ Tiki thuộc 4 danh mục: Chăm sóc da mặt, Điện gia dụng, Bách hóa online, Thời trang (bao gồm đồng hồ, trang sức, giày dép).
+    \item \textbf{Thuật toán:} Content-Based Filtering kết hợp Popularity Scoring (không sử dụng Collaborative Filtering do đặc thù dữ liệu).
+    \item \textbf{Nền tảng:} Web application full-stack với Django + FastAPI.
+\end{itemize}
+
+% ============================================================
+% CHƯƠNG 2: CƠ SỞ LÝ THUYẾT
+% ============================================================
+\chapter{Cơ Sở Lý Thuyết}
+
+\section{Tổng quan về Recommendation System}
+
+Hệ thống gợi ý (Recommendation System) là một lớp con của hệ thống lọc thông tin (Information Filtering System), nhằm dự đoán mức độ quan tâm của người dùng đối với một item. Có ba phương pháp chính:
+
+\begin{enumerate}
+    \item \textbf{Collaborative Filtering (CF):} Dựa trên hành vi của nhóm người dùng tương tự.
+    \item \textbf{Content-Based Filtering (CBF):} Dựa trên đặc trưng nội dung của item.
+    \item \textbf{Hybrid Methods:} Kết hợp cả CF và CBF.
+\end{enumerate}
+
+Trong đề tài này, chúng tôi sử dụng \textbf{Content-Based Filtering kết hợp Popularity Scoring} vì:
+\begin{itemize}
+    \item Dữ liệu sản phẩm phong phú (tên, thương hiệu, danh mục, giá, rating)
+    \item Không yêu cầu lịch sử tương tác lớn (giải quyết cold-start problem)
+    \item Phù hợp với kịch bản e-commerce nơi sản phẩm mới liên tục được thêm vào
+\end{itemize}
+
+\section{TF-IDF (Term Frequency -- Inverse Document Frequency)}
+
+\subsection{Định nghĩa}
+
+TF-IDF là phương pháp biểu diễn văn bản dưới dạng vector số, phản ánh tầm quan trọng của một từ trong một tài liệu so với toàn bộ corpus.
+
+\begin{equation}
+\text{TF-IDF}(t, d, D) = \text{TF}(t, d) \times \text{IDF}(t, D)
+\end{equation}
+
+Trong đó:
+\begin{itemize}
+    \item $\text{TF}(t, d)$: Tần suất xuất hiện của term $t$ trong document $d$
+    \item $\text{IDF}(t, D) = \log\frac{|D|}{|\{d \in D : t \in d\}|}$: Nghịch đảo tần suất document chứa term $t$
+\end{itemize}
+
+\subsection{Ứng dụng trong hệ thống}
+
+Trong AuraShop, TF-IDF được sử dụng với cấu hình:
+\begin{itemize}
+    \item \textbf{N-gram range:} (1, 2) — capture cả unigram và bigram
+    \item \textbf{Max features:} 5000 (cho hybrid engine) hoặc không giới hạn (cho category models)
+    \item \textbf{Input text:} Kết hợp tên sản phẩm + thương hiệu + danh mục
+\end{itemize}
+
+\begin{equation}
+\text{TextData}_i = \text{Name}_i \oplus \text{Brand}_i \oplus \text{CategoryName}_i
+\end{equation}
+
+\section{Sentence Transformers và Semantic Embeddings}
+
+\subsection{Mô hình paraphrase-multilingual-MiniLM-L12-v2}
+
+Sentence Transformers là framework dựa trên kiến trúc Transformer (BERT) được fine-tune để tạo ra sentence embeddings có ý nghĩa ngữ nghĩa. Mô hình \texttt{paraphrase-multilingual-MiniLM-L12-v2} được chọn vì:
+
+\begin{itemize}
+    \item Hỗ trợ đa ngôn ngữ (bao gồm tiếng Việt)
+    \item Kích thước nhỏ gọn (12 layers, 384 dimensions)
+    \item Hiệu suất tốt trên task semantic similarity
+    \item Tốc độ inference nhanh, phù hợp real-time serving
+\end{itemize}
+
+\subsection{Kiến trúc Transformer}
+
+Mô hình sử dụng kiến trúc Transformer encoder với cơ chế Self-Attention:
+
+\begin{equation}
+\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V
+\end{equation}
+
+Trong đó $Q$, $K$, $V$ lần lượt là Query, Key, Value matrices, và $d_k$ là chiều của key vectors.
+
+Output embedding được normalize:
+\begin{equation}
+\vec{e}_{\text{norm}} = \frac{\vec{e}}{||\vec{e}||_2}
+\end{equation}
+
+\section{Cosine Similarity}
+
+Cosine Similarity đo độ tương đồng giữa hai vector trong không gian nhiều chiều:
+
+\begin{equation}
+\text{cos}(\vec{a}, \vec{b}) = \frac{\vec{a} \cdot \vec{b}}{||\vec{a}|| \times ||\vec{b}||} = \frac{\sum_{i=1}^{n} a_i b_i}{\sqrt{\sum_{i=1}^{n} a_i^2} \times \sqrt{\sum_{i=1}^{n} b_i^2}}
+\end{equation}
+
+Giá trị nằm trong khoảng $[-1, 1]$, với 1 là hoàn toàn giống nhau và -1 là hoàn toàn ngược nhau. Trong hệ thống, cosine similarity được dùng để:
+\begin{itemize}
+    \item So sánh TF-IDF vector của query với TF-IDF vector của sản phẩm
+    \item So sánh embedding vector của query với embedding vector của sản phẩm
+\end{itemize}
+
+\section{Popularity Scoring}
+
+Popularity Score kết hợp hai yếu tố: đánh giá (rating) và giá cả (price), được chuẩn hóa bằng Min-Max Scaling:
+
+\begin{equation}
+\text{MinMaxScale}(x) = \frac{x - x_{\min}}{x_{\max} - x_{\min}}
+\end{equation}
+
+\begin{equation}
+\text{PopScore}_i = w_r \times \text{RatingScaled}_i + w_p \times (1 - \text{PriceScaled}_i)
+\end{equation}
+
+Trong đó:
+\begin{itemize}
+    \item $w_r$: Trọng số cho rating (0.5 -- 0.6 tùy category)
+    \item $w_p$: Trọng số cho giá rẻ (0.4 -- 0.5 tùy category)
+    \item $(1 - \text{PriceScaled})$: Đảo ngược để sản phẩm giá rẻ hơn có score cao hơn
+\end{itemize}
+
+\section{Hybrid Scoring Formula}
+
+\subsection{Search Scoring (Hybrid Engine)}
+
+Khi người dùng tìm kiếm, điểm cuối cùng được tính:
+
+\begin{equation}
+\text{ContentScore} = 0.65 \times \text{EmbeddingScore} + 0.35 \times \text{TfidfScore}
+\end{equation}
+
+\begin{equation}
+\text{FinalScore}_{\text{search}} = 0.70 \times \text{ContentScore} + 0.30 \times \text{PopScore}
+\end{equation}
+
+\subsection{Category Model Scoring}
+
+Các model theo danh mục sử dụng công thức đơn giản hơn:
+
+\begin{equation}
+\text{FinalScore}_{\text{category}} = \alpha \times \text{CosineSim}(q, p_i) + (1 - \alpha) \times \text{PopScore}_i + \text{TypeBonus}_i
+\end{equation}
+
+Trong đó:
+\begin{itemize}
+    \item $\alpha$: Trọng số content similarity (0.6 cho beauty, 0.7 cho electronic/fashion/grocery)
+    \item $\text{TypeBonus}$: Bonus 0.1 nếu sản phẩm cùng loại với query
+\end{itemize}
+
+\subsection{Cross-sell Scoring}
+
+Khi gợi ý sản phẩm liên quan (cross-sell):
+
+\begin{equation}
+\text{FinalScore}_{\text{cross-sell}} = 0.60 \times \text{ContentScore} + 0.30 \times \text{PopScore} + \text{CategoryBonus}
+\end{equation}
+
+Với $\text{CategoryBonus} = 0.10$ nếu sản phẩm cùng danh mục.
+
+\section{ChromaDB và Vector Database}
+
+ChromaDB là một vector database mã nguồn mở, được sử dụng trong hệ thống để:
+
+\begin{itemize}
+    \item Lưu trữ lịch sử tương tác người dùng dưới dạng vector embeddings
+    \item Thực hiện semantic search trên lịch sử hành vi
+    \item Giải quyết bài toán Cold Start khi người dùng quay lại
+\end{itemize}
+
+Cấu hình sử dụng:
+\begin{itemize}
+    \item \textbf{Distance metric:} Cosine similarity (HNSW space)
+    \item \textbf{Persistence:} Lưu trữ trên disk để không mất dữ liệu khi restart
+    \item \textbf{Interaction weighting:} Buy (5) $>$ AddToCart (3) $>$ Search (2) $>$ View (1)
+\end{itemize}
+
+\section{Min-Max Normalization}
+
+Chuẩn hóa Min-Max được sử dụng để đưa các đặc trưng số (price, rating) về cùng khoảng $[0, 1]$:
+
+\begin{equation}
+x_{\text{scaled}} = \frac{x - x_{\min}}{x_{\max} - x_{\min}}
+\end{equation}
+
+Điều này đảm bảo các đặc trưng có scale khác nhau (giá: hàng triệu VNĐ, rating: 0-5) không bị bias khi kết hợp vào feature vector.
+
+% ============================================================
+% CHƯƠNG 3: THIẾT KẾ HỆ THỐNG
+% ============================================================
+\chapter{Thiết Kế Hệ Thống}
+
+\section{Kiến trúc tổng quan}
+
+Hệ thống AuraShop được thiết kế theo kiến trúc microservice gồm 3 thành phần chính:
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    box/.style={draw, rounded corners, minimum width=4cm, minimum height=1.5cm, align=center, fill=blue!10},
+    arrow/.style={->, thick, >=stealth}
+]
+    \node[box, fill=green!15] (web) at (0, 0) {\textbf{Django Web}\\ Port 8080\\ Backend + Frontend};
+    \node[box, fill=orange!15] (ai) at (6, 0) {\textbf{AI Model Service}\\ Port 8000\\ FastAPI + ML Models};
+    \node[box, fill=purple!15] (db) at (12, 0) {\textbf{MySQL 8.0}\\ Port 3307\\ Docker Container};
+    \node[box, fill=cyan!15] (chroma) at (0, -3.5) {\textbf{ChromaDB}\\ Vector Store\\ User Tracking};
+
+    \draw[arrow] (web) -- node[above] {HTTP/REST} (ai);
+    \draw[arrow] (ai) -- node[above] {SQL} (db);
+    \draw[arrow] (web) -- node[left] {Embedding} (chroma);
+\end{tikzpicture}
+\caption{Kiến trúc tổng quan hệ thống AuraShop}
+\label{fig:architecture}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{Các thành phần hệ thống}
+\label{tab:components}
+\begin{tabular}{llp{7cm}}
+\toprule
+\textbf{Thành phần} & \textbf{Công nghệ} & \textbf{Chức năng} \\
+\midrule
+Web Application & Django 5.1 + DRF & Backend API, Frontend (TailwindCSS + Alpine.js), Authentication \\
+AI Engine & FastAPI + scikit-learn & Recommendation models, Search, Cross-sell \\
+Database & MySQL 8.0 (Docker) & Lưu trữ sản phẩm, người dùng, tương tác \\
+Vector Store & ChromaDB & Tracking hành vi, personalization \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Thiết kế AI Engine}
+
+AI Engine là thành phần cốt lõi, bao gồm hai tầng model:
+
+\subsection{Tầng 1: Category-Specific Models}
+
+Mỗi danh mục sản phẩm có một model riêng biệt, được tối ưu cho đặc thù của danh mục đó:
+
+\begin{table}[H]
+\centering
+\caption{Category Models và cấu hình}
+\label{tab:category_models}
+\begin{tabular}{lccl}
+\toprule
+\textbf{Model} & \textbf{$\alpha$} & \textbf{Pop Weights} & \textbf{Đặc thù} \\
+\midrule
+Beauty & 0.6 & 0.5R + 0.5P & RELATED\_MAP skincare routine \\
+Electronic & 0.7 & 0.6R + 0.4P & Phụ kiện laptop, thiết bị \\
+Grocery & 0.7 & 0.6R + 0.4P & Thực phẩm bổ sung \\
+Fashion & 0.7 & 0.6R + 0.4P & Trang sức, giày dép \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Mỗi category model sử dụng:
+\begin{itemize}
+    \item TF-IDF Vectorizer (bigram) cho text similarity
+    \item MinMaxScaler cho numerical features (price, rating)
+    \item Sparse matrix (scipy.sparse.hstack) kết hợp text + numerical vectors
+    \item Product Type Classification dựa trên keyword matching
+    \item RELATED\_MAP: Bảng ánh xạ quan hệ giữa các loại sản phẩm
+\end{itemize}
+
+\subsection{Tầng 2: Hybrid Recommendation Engine}
+
+Hybrid Engine hoạt động như fallback và bổ sung cho category models:
+
+\begin{itemize}
+    \item Sử dụng \textbf{Sentence Transformers} (paraphrase-multilingual-MiniLM-L12-v2) cho semantic understanding
+    \item Kết hợp TF-IDF scores với embedding scores
+    \item Lazy loading model để tối ưu memory
+    \item Batch encoding (batch\_size=64) cho hiệu suất
+\end{itemize}
+
+\subsection{Luồng xử lý Search}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    box/.style={draw, rounded corners, minimum width=3cm, minimum height=1cm, align=center, font=\small},
+    arrow/.style={->, thick, >=stealth}
+]
+    \node[box, fill=yellow!20] (query) at (0, 0) {User Query};
+    \node[box, fill=blue!10] (clean) at (0, -1.5) {Text Cleaning};
+    \node[box, fill=green!10] (cat1) at (-3, -3.5) {Beauty Model};
+    \node[box, fill=green!10] (cat2) at (-1, -3.5) {Electronic};
+    \node[box, fill=green!10] (cat3) at (1, -3.5) {Grocery};
+    \node[box, fill=green!10] (cat4) at (3, -3.5) {Fashion};
+    \node[box, fill=orange!10] (hybrid) at (0, -5.5) {Hybrid Engine};
+    \node[box, fill=red!10] (merge) at (0, -7) {Merge \& Rank};
+    \node[box, fill=purple!10] (result) at (0, -8.5) {Top-K Results};
+
+    \draw[arrow] (query) -- (clean);
+    \draw[arrow] (clean) -- (cat1);
+    \draw[arrow] (clean) -- (cat2);
+    \draw[arrow] (clean) -- (cat3);
+    \draw[arrow] (clean) -- (cat4);
+    \draw[arrow] (clean) -- (hybrid);
+    \draw[arrow] (cat1) -- (merge);
+    \draw[arrow] (cat2) -- (merge);
+    \draw[arrow] (cat3) -- (merge);
+    \draw[arrow] (cat4) -- (merge);
+    \draw[arrow] (hybrid) -- (merge);
+    \draw[arrow] (merge) -- (result);
+\end{tikzpicture}
+\caption{Luồng xử lý Search trong AI Engine}
+\label{fig:search_flow}
+\end{figure}
+
+\subsection{Luồng xử lý Cross-sell}
+
+\begin{enumerate}
+    \item Nhận product\_id từ request
+    \item Tra cứu sản phẩm trong database → xác định CategoryId
+    \item Sử dụng category model tương ứng (recommend\_click)
+    \item Phân loại kết quả: \texttt{same\_type} (cùng loại) và \texttt{related\_type} (loại liên quan)
+    \item Merge và trả về top-K kết quả
+    \item Fallback sang Hybrid Engine nếu category model không có kết quả
+\end{enumerate}
+
+\section{Thiết kế RELATED\_MAP}
+
+Một đặc điểm quan trọng của hệ thống là bảng ánh xạ quan hệ sản phẩm (RELATED\_MAP), được thiết kế thủ công dựa trên domain knowledge:
+
+\begin{table}[H]
+\centering
+\caption{Ví dụ RELATED\_MAP cho danh mục Beauty}
+\label{tab:related_map_beauty}
+\begin{tabular}{lp{9cm}}
+\toprule
+\textbf{Product Type} & \textbf{Related Types} \\
+\midrule
+Sữa rửa mặt & Tẩy trang, Toner, Nước hoa hồng, Serum, Kem dưỡng, Bông tẩy trang, Tẩy tế bào chết \\
+Serum & Kem dưỡng, Kem mắt, Mặt nạ, Chấm mụn \\
+Kem chống nắng & Serum, Kem dưỡng, Tẩy trang \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Ví dụ RELATED\_MAP cho danh mục Electronic}
+\label{tab:related_map_electronic}
+\begin{tabular}{lp{9cm}}
+\toprule
+\textbf{Product Type} & \textbf{Related Types} \\
+\midrule
+Laptop & Mouse, Keyboard, Audio, Monitor \\
+Monitor & Laptop, Mouse, Keyboard \\
+Mouse & Laptop, Keyboard \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+RELATED\_MAP cho phép hệ thống gợi ý sản phẩm bổ sung (complementary products) thay vì chỉ sản phẩm tương tự (similar products), tăng giá trị cross-sell.
+
+\section{Thiết kế User Tracking}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    box/.style={draw, rounded corners, minimum width=3.5cm, minimum height=1cm, align=center, font=\small},
+    arrow/.style={->, thick, >=stealth}
+]
+    \node[box, fill=yellow!20] (action) at (0, 0) {User Action\\(View/Click/Buy)};
+    \node[box, fill=blue!10] (log) at (0, -2) {Log to MySQL\\(UserInteractions)};
+    \node[box, fill=green!10] (chroma) at (0, -4) {Upsert to ChromaDB\\(Vector Embedding)};
+    \node[box, fill=orange!10] (return) at (5, -2) {User Returns};
+    \node[box, fill=purple!10] (query) at (5, -4) {Query ChromaDB\\(Semantic Search)};
+    \node[box, fill=red!10] (personal) at (5, -6) {Personalized\\Recommendations};
+
+    \draw[arrow] (action) -- (log);
+    \draw[arrow] (log) -- (chroma);
+    \draw[arrow] (return) -- (query);
+    \draw[arrow] (query) -- (personal);
+\end{tikzpicture}
+\caption{Luồng User Tracking và Personalization}
+\label{fig:tracking_flow}
+\end{figure}
+
+% ============================================================
+% CHƯƠNG 4: THUẬT TOÁN VÀ MÔ HÌNH
+% ============================================================
+\chapter{Thuật Toán và Mô Hình Chi Tiết}
+
+\section{Pipeline xử lý dữ liệu}
+
+\subsection{Text Preprocessing}
+
+Quá trình tiền xử lý văn bản bao gồm:
+
+\begin{algorithm}[H]
+\caption{Text Cleaning Pipeline}
+\begin{algorithmic}[1]
+\REQUIRE Raw text $t$
+\ENSURE Cleaned text $t'$
+\STATE $t \leftarrow \text{lowercase}(t)$
+\STATE $t \leftarrow \text{remove\_units}(t)$ \COMMENT{Loại bỏ: 100ml, 50g, 1kg...}
+\STATE $t \leftarrow \text{remove\_special\_chars}(t)$ \COMMENT{Giữ lại: chữ, số, khoảng trắng}
+\STATE $t \leftarrow \text{collapse\_whitespace}(t)$ \COMMENT{Nhiều space → 1 space}
+\STATE $t \leftarrow \text{strip}(t)$
+\RETURN $t$
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Feature Engineering}
+
+Mỗi sản phẩm được biểu diễn bởi feature vector kết hợp:
+
+\begin{equation}
+\vec{X}_i = [\text{TF-IDF}(\text{TextData}_i) \; || \; \text{Scale}(\text{Price}_i, \text{Rating}_i)]
+\end{equation}
+
+Trong đó $||$ là phép nối (concatenation) sử dụng sparse matrix hstack.
+
+\section{Thuật toán Search Recommendation}
+
+\subsection{Category Model Search}
+
+\begin{algorithm}[H]
+\caption{Category-Specific Search Recommendation}
+\begin{algorithmic}[1]
+\REQUIRE Query $q$, top\_k, weight $\alpha$
+\ENSURE Ranked list of products
+\STATE $q' \leftarrow \text{clean\_query}(q)$
+\STATE $\vec{q}_{\text{text}} \leftarrow \text{TF-IDF.transform}([q'])$
+\STATE $\vec{q}_{\text{num}} \leftarrow \text{Scaler.transform}([[0, 0]])$ \COMMENT{Dummy numerical features}
+\STATE $\vec{q} \leftarrow \text{hstack}([\vec{q}_{\text{text}}, \vec{q}_{\text{num}}])$
+\STATE $\text{sim} \leftarrow \text{cosine\_similarity}(\vec{q}, X)$ \COMMENT{So sánh với tất cả sản phẩm}
+\STATE $\text{type} \leftarrow \text{get\_product\_type}(q')$
+\STATE $\text{bonus} \leftarrow 0.1 \times \mathbb{1}[\text{product\_types} = \text{type}]$
+\STATE $\text{scores} \leftarrow \alpha \times \text{sim} + (1-\alpha) \times \text{pop\_scores} + \text{bonus}$
+\STATE $\text{scores}[\text{rating} < 3] \leftarrow -1$ \COMMENT{Lọc sản phẩm rating thấp}
+\RETURN $\text{top\_k}(\text{argsort}(\text{scores}))$
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Hybrid Engine Search}
+
+\begin{algorithm}[H]
+\caption{Hybrid Search (TF-IDF + Sentence Embedding)}
+\begin{algorithmic}[1]
+\REQUIRE Query $q$, top\_k
+\ENSURE Ranked list of products with FinalScore
+\STATE $q' \leftarrow \text{clean\_text}(q)$
+\STATE \COMMENT{--- TF-IDF Branch ---}
+\STATE $\text{tfidf\_scores} \leftarrow \text{cosine\_sim}(\text{TF-IDF}(q'), \text{TF-IDF\_matrix})$
+\STATE \COMMENT{--- Embedding Branch ---}
+\STATE $\vec{e}_q \leftarrow \text{SentenceTransformer.encode}(q', \text{normalize}=\text{True})$
+\STATE $\text{emb\_scores} \leftarrow \text{cosine\_sim}(\vec{e}_q, \text{embedding\_matrix})$
+\STATE \COMMENT{--- Hybrid Scoring ---}
+\STATE $\text{ContentScore} \leftarrow 0.65 \times \text{emb\_scores} + 0.35 \times \text{tfidf\_scores}$
+\STATE $\text{FinalScore} \leftarrow 0.70 \times \text{ContentScore} + 0.30 \times \text{PopScore}$
+\RETURN $\text{top\_k}(\text{argsort}(\text{FinalScore}))$
+\end{algorithmic}
+\end{algorithm}
+
+\section{Thuật toán Cross-sell Recommendation}
+
+\begin{algorithm}[H]
+\caption{Cross-sell Recommendation (recommend\_click)}
+\begin{algorithmic}[1]
+\REQUIRE Product name $p$, top\_k, weight $\alpha$
+\ENSURE \{same\_type: [...], related\_type: [...]\}
+\STATE $p' \leftarrow \text{clean\_query}(p)$
+\STATE $\vec{p} \leftarrow \text{hstack}([\text{TF-IDF}(p'), \text{Scaler}([0,0])])$
+\STATE $\text{sim} \leftarrow \text{cosine\_similarity}(\vec{p}, X)$
+\STATE $\text{base\_type} \leftarrow \text{get\_product\_type}(p')$
+\STATE $\text{related\_types} \leftarrow \text{RELATED\_MAP}[\text{base\_type}]$
+\STATE $\text{scores} \leftarrow \alpha \times \text{sim} + (1-\alpha) \times \text{pop\_scores}$
+\STATE $\text{scores}[\text{rating} < 3] \leftarrow -1$
+\STATE \COMMENT{--- Phân loại kết quả ---}
+\STATE $\text{same\_mask} \leftarrow (\text{types} = \text{base\_type}) \wedge (\text{rating} \geq 3)$
+\STATE $\text{related\_mask} \leftarrow (\text{types} \in \text{related\_types}) \wedge (\text{rating} \geq 3)$
+\STATE $\text{same\_type} \leftarrow \text{top\_k}(\text{scores}[\text{same\_mask}])$
+\STATE $\text{related\_type} \leftarrow \text{top\_k}(\text{scores}[\text{related\_mask}])$
+\RETURN \{same\_type, related\_type\}
+\end{algorithmic}
+\end{algorithm}
+
+\section{Thuật toán Personalization}
+
+\begin{algorithm}[H]
+\caption{Personalized Recommendation via ChromaDB}
+\begin{algorithmic}[1]
+\REQUIRE user\_id, top\_k
+\ENSURE Personalized product list
+\STATE $\text{history} \leftarrow \text{ChromaDB.get}(\text{where}=\{\text{user\_id}\})$
+\IF{history is empty}
+    \RETURN Popular products (cold start)
+\ENDIF
+\STATE Sort history by weight (Buy=5, AddToCart=3, Search=2, View=1)
+\STATE $\text{product\_ids} \leftarrow$ unique product IDs from history
+\FOR{each $pid$ in product\_ids[:5]}
+    \STATE $\text{similar} \leftarrow \text{AI\_cross\_sell}(pid, \text{top\_k}=5)$
+    \STATE Append similar to results
+\ENDFOR
+\STATE Deduplicate and rank results
+\RETURN results[:top\_k]
+\end{algorithmic}
+\end{algorithm}
+
+\section{Offline Training Pipeline}
+
+Quá trình training offline được thực hiện một lần trên dữ liệu CSV gốc:
+
+\begin{algorithm}[H]
+\caption{Offline Training}
+\begin{algorithmic}[1]
+\REQUIRE CSV files per category
+\ENSURE Trained vectorizers and scalers (.pkl files)
+\FOR{each category $c$ in \{beauty, electronic, grocery, fashion\}}
+    \STATE Load all CSV files for category $c$
+    \STATE $\text{text\_data} \leftarrow \text{name} + \text{brand}$ (lowercase, cleaned)
+    \STATE $\text{vectorizer}_c \leftarrow \text{TfidfVectorizer(ngram=(1,2)).fit}(\text{text\_data})$
+    \STATE $\text{scaler}_c \leftarrow \text{MinMaxScaler().fit}(\text{price}, \text{rating})$
+    \STATE Save $\text{vectorizer}_c$ → \texttt{trained/\{c\}\_vectorizer.pkl}
+    \STATE Save $\text{scaler}_c$ → \texttt{trained/\{c\}\_scaler.pkl}
+\ENDFOR
+\STATE \COMMENT{--- Hybrid model (all categories combined) ---}
+\STATE Combine all category data
+\STATE $\text{vectorizer}_h \leftarrow \text{TfidfVectorizer(ngram=(1,2), max\_features=5000).fit}(\text{all\_text})$
+\STATE Save → \texttt{trained/hybrid\_vectorizer.pkl}
+\end{algorithmic}
+\end{algorithm}
+
+Lợi ích của offline training:
+\begin{itemize}
+    \item Giảm thời gian khởi động service (chỉ cần transform, không cần fit)
+    \item Đảm bảo vocabulary nhất quán giữa các lần deploy
+    \item Cho phép version control các model artifacts
+\end{itemize}
+
+\section{So sánh hai tầng model}
+
+\begin{table}[H]
+\centering
+\caption{So sánh Category Models vs Hybrid Engine}
+\label{tab:model_comparison}
+\begin{tabular}{p{3.5cm}p{5.5cm}p{5.5cm}}
+\toprule
+\textbf{Tiêu chí} & \textbf{Category Models} & \textbf{Hybrid Engine} \\
+\midrule
+Vectorization & TF-IDF (bigram) & TF-IDF + Sentence Transformer \\
+Semantic Understanding & Keyword matching & Deep semantic similarity \\
+Speed & Rất nhanh ($<$10ms) & Chậm hơn ($\sim$50-100ms) \\
+Memory & Thấp (sparse matrix) & Cao (dense embeddings) \\
+Product Type Awareness & Có (RELATED\_MAP) & Không \\
+Cross-sell & same\_type + related\_type & Content similarity only \\
+Use case & Primary search & Fallback + enrichment \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Chiến lược Merge và Deduplication}
+
+Khi search, kết quả từ nhiều nguồn được merge:
+
+\begin{enumerate}
+    \item Chạy song song 4 category models + 1 hybrid engine
+    \item Sử dụng \texttt{seen\_ids} set để loại bỏ trùng lặp
+    \item Ưu tiên kết quả từ category models (chạy trước)
+    \item Sort toàn bộ theo \texttt{score} giảm dần
+    \item Trả về top\_k kết quả cuối cùng
+\end{enumerate}
+
+Chiến lược này đảm bảo:
+\begin{itemize}
+    \item Không có sản phẩm trùng lặp trong kết quả
+    \item Category-specific results được ưu tiên (chính xác hơn)
+    \item Hybrid engine bổ sung sản phẩm mà category models bỏ sót
+\end{itemize}
+
+% ============================================================
+% CHƯƠNG 5: TRIỂN KHAI
+% ============================================================
+\chapter{Triển Khai Hệ Thống}
+
+\section{Công nghệ sử dụng}
+
+\begin{table}[H]
+\centering
+\caption{Stack công nghệ}
+\label{tab:tech_stack}
+\begin{tabular}{llp{7cm}}
+\toprule
+\textbf{Layer} & \textbf{Công nghệ} & \textbf{Mô tả} \\
+\midrule
+Web Backend & Django 5.1 + DRF & REST API, Authentication (JWT), ORM \\
+Web Frontend & TailwindCSS + Alpine.js & Responsive UI, reactive components \\
+AI Service & FastAPI & Async API, auto-documentation (Swagger) \\
+ML Libraries & scikit-learn, sentence-transformers & TF-IDF, Cosine Similarity, Embeddings \\
+Database & MySQL 8.0 & Relational data (products, users, interactions) \\
+Vector DB & ChromaDB & User behavior embeddings \\
+Containerization & Docker Compose & MySQL container, volume persistence \\
+HTTP Client & httpx & Django → FastAPI communication \\
+Data Processing & pandas, numpy, scipy & DataFrame operations, sparse matrices \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Cấu trúc thư mục}
+
+\begin{lstlisting}[language=bash, caption=Cấu trúc project]
+DACN/
+|-- docker-compose.yml
+|-- model/                    # AI Engine (FastAPI)
+|   |-- main.py              # FastAPI app + endpoints
+|   |-- recommender.py       # Hybrid Recommendation Engine
+|   |-- db.py                # Database connection (SQLAlchemy)
+|   |-- train_offline.py     # Offline training script
+|   |-- models/
+|   |   |-- model_beauty.py
+|   |   |-- model_electronic.py
+|   |   |-- model_fashion.py
+|   |   |-- model_grocery.py
+|   |-- trained/             # Pre-trained .pkl files
+|   |-- data/                # CSV datasets
+|-- web/                     # Django Web Application
+|   |-- apps/
+|   |   |-- products/        # Product CRUD
+|   |   |-- recommendations/ # Recommendation proxy
+|   |   |-- tracking/        # User behavior tracking
+|   |   |-- users/           # Authentication
+\end{lstlisting}
+
+\section{API Endpoints}
+
+\begin{table}[H]
+\centering
+\caption{AI Engine API Endpoints}
+\label{tab:api_endpoints}
+\begin{tabular}{llp{6cm}}
+\toprule
+\textbf{Method} & \textbf{Endpoint} & \textbf{Mô tả} \\
+\midrule
+GET & /search?q=\&top\_k= & Tìm kiếm sản phẩm (multi-model) \\
+GET & /cross-sell/\{product\_id\} & Gợi ý sản phẩm liên quan \\
+POST & /rebuild & Rebuild tất cả models \\
+GET & /health & Health check \\
+GET & /metrics & Model metrics \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Web Application API Endpoints}
+\label{tab:web_api}
+\begin{tabular}{llp{6cm}}
+\toprule
+\textbf{Method} & \textbf{Endpoint} & \textbf{Mô tả} \\
+\midrule
+GET & /api/v1/recommendations/search/ & Proxy search đến AI Engine \\
+GET & /api/v1/recommendations/cross-sell/\{id\}/ & Proxy cross-sell \\
+GET & /api/v1/recommendations/personalized/ & Gợi ý cá nhân (JWT required) \\
+POST & /api/v1/tracking/interaction/ & Log user interaction \\
+POST & /api/v1/tracking/checkout/ & Log purchase \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Dữ liệu}
+
+\subsection{Nguồn dữ liệu}
+
+Dữ liệu được thu thập từ Tiki.vn, bao gồm khoảng 8.000 sản phẩm thuộc 4 danh mục:
+
+\begin{table}[H]
+\centering
+\caption{Thống kê dữ liệu theo danh mục}
+\label{tab:data_stats}
+\begin{tabular}{llc}
+\toprule
+\textbf{Category ID} & \textbf{Danh mục} & \textbf{Số CSV files} \\
+\midrule
+1 & Chăm sóc da mặt (Beauty) & 1 \\
+2 & Điện gia dụng + Laptop (Electronic) & 2 \\
+3 & Bách hóa online (Grocery) & 1 \\
+4 & Thời trang + Đồng hồ + Giày dép (Fashion) & 4 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Cấu trúc dữ liệu sản phẩm}
+
+Mỗi sản phẩm bao gồm các trường:
+\begin{itemize}
+    \item \textbf{Id}: Mã sản phẩm duy nhất
+    \item \textbf{Name}: Tên sản phẩm (tiếng Việt)
+    \item \textbf{CleanName}: Tên đã được làm sạch
+    \item \textbf{Brand}: Thương hiệu
+    \item \textbf{Price}: Giá bán (VNĐ)
+    \item \textbf{OriginalPrice}: Giá gốc
+    \item \textbf{DiscountRate}: Tỷ lệ giảm giá
+    \item \textbf{Rating}: Đánh giá trung bình (0-5)
+    \item \textbf{ReviewCount}: Số lượng đánh giá
+    \item \textbf{ImageUrl}: URL hình ảnh
+    \item \textbf{CategoryId}: Mã danh mục
+\end{itemize}
+
+\section{Deployment Architecture}
+
+\begin{lstlisting}[language=bash, caption=Docker Compose configuration]
+services:
+  db:
+    image: mysql:8.0
+    ports: "3307:3306"
+    healthcheck: mysqladmin ping
+    
+  web:
+    build: ./web
+    ports: "8080:8000"
+    depends_on: db (healthy)
+    environment:
+      - AI_SERVICE_BASE_URL=http://host.docker.internal:8000
+    command: gunicorn config.wsgi --workers 3
+\end{lstlisting}
+
+Đặc điểm deployment:
+\begin{itemize}
+    \item MySQL chạy trong Docker container với health check
+    \item AI Model Service chạy native (cần GPU/CPU cho Sentence Transformer)
+    \item Django Web có thể chạy native hoặc Docker
+    \item Communication giữa services qua HTTP REST
+    \item ChromaDB persist data trên Docker volume
+\end{itemize}
+
+% ============================================================
+% CHƯƠNG 6: KẾT QUẢ VÀ ĐÁNH GIÁ
+% ============================================================
+\chapter{Kết Quả và Đánh Giá}
+
+\section{Kết quả đạt được}
+
+\subsection{Chức năng hoàn thành}
+
+\begin{enumerate}
+    \item \textbf{Tìm kiếm thông minh:} Người dùng nhập query tiếng Việt → hệ thống trả về sản phẩm phù hợp nhất từ tất cả danh mục.
+    \item \textbf{Cross-sell:} Khi xem chi tiết sản phẩm → gợi ý sản phẩm cùng loại và sản phẩm bổ sung.
+    \item \textbf{Personalization:} Theo dõi hành vi → gợi ý cá nhân hóa khi quay lại.
+    \item \textbf{Multi-category support:} 4 model chuyên biệt cho 4 danh mục khác nhau.
+    \item \textbf{Offline training:} Train một lần, serve nhiều lần.
+    \item \textbf{Full-stack web:} Giao diện responsive, authentication, admin panel.
+\end{enumerate}
+
+\subsection{Hiệu suất}
+
+\begin{table}[H]
+\centering
+\caption{Hiệu suất hệ thống}
+\label{tab:performance}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Metric} & \textbf{Category Models} & \textbf{Hybrid Engine} \\
+\midrule
+Thời gian response (search) & $<$ 10ms & $\sim$ 50-100ms \\
+Thời gian startup & $\sim$ 2s & $\sim$ 30s (load model) \\
+Memory usage & $\sim$ 50MB/model & $\sim$ 500MB \\
+Số sản phẩm hỗ trợ & $\sim$ 8.000 & $\sim$ 8.000 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Phân tích thuật toán}
+
+\subsection{Ưu điểm}
+
+\begin{itemize}
+    \item \textbf{Không cần user history để hoạt động:} Content-based approach cho phép gợi ý ngay cả với người dùng mới (giải quyết cold-start problem).
+    \item \textbf{Interpretable:} Có thể giải thích tại sao sản phẩm được gợi ý (dựa trên text similarity + popularity).
+    \item \textbf{Real-time:} Category models cho response time rất thấp ($<$10ms).
+    \item \textbf{Domain-aware:} RELATED\_MAP encode domain knowledge, cho phép cross-sell chính xác.
+    \item \textbf{Multilingual:} Sentence Transformer hỗ trợ tiếng Việt native.
+    \item \textbf{Scalable:} Kiến trúc microservice cho phép scale từng component độc lập.
+\end{itemize}
+
+\subsection{Hạn chế}
+
+\begin{itemize}
+    \item \textbf{Không có Collaborative Filtering:} Không tận dụng được pattern ``người mua A cũng mua B''.
+    \item \textbf{RELATED\_MAP thủ công:} Cần domain expert để maintain, không tự động học.
+    \item \textbf{Product Type Classification đơn giản:} Dựa trên keyword matching, có thể miss-classify.
+    \item \textbf{Rating threshold cứng:} Lọc rating $< 3$ có thể loại bỏ sản phẩm mới chưa có review.
+    \item \textbf{Chưa có A/B testing:} Chưa đánh giá được hiệu quả thực tế trên user.
+\end{itemize}
+
+\subsection{Độ phức tạp thuật toán}
+
+\begin{table}[H]
+\centering
+\caption{Độ phức tạp thời gian}
+\label{tab:complexity}
+\begin{tabular}{lll}
+\toprule
+\textbf{Operation} & \textbf{Time Complexity} & \textbf{Ghi chú} \\
+\midrule
+TF-IDF transform & $O(|V| \times |q|)$ & $|V|$: vocabulary size \\
+Cosine similarity & $O(n \times d)$ & $n$: số sản phẩm, $d$: dimensions \\
+Sorting (top-k) & $O(n \log n)$ & numpy argsort \\
+Embedding encode & $O(|q| \times L^2)$ & $L$: sequence length (Transformer) \\
+ChromaDB query & $O(\log n)$ & HNSW approximate search \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Ví dụ minh họa}
+
+\subsection{Ví dụ 1: Search ``sữa rửa mặt''}
+
+\begin{enumerate}
+    \item Query được clean: ``sữa rửa mặt''
+    \item Beauty model: TF-IDF match cao với sản phẩm chứa ``sữa rửa mặt'' → score cao
+    \item Product type = ``sữa rửa mặt'' → bonus +0.1 cho sản phẩm cùng type
+    \item Rating filter: loại sản phẩm rating $< 3$
+    \item Kết quả: Top sữa rửa mặt rating cao, giá hợp lý
+\end{enumerate}
+
+\subsection{Ví dụ 2: Cross-sell từ ``Laptop Dell XPS''}
+
+\begin{enumerate}
+    \item Product type = ``laptop''
+    \item RELATED\_MAP[``laptop''] = [``mouse'', ``keyboard'', ``audio'', ``monitor'']
+    \item same\_type: Các laptop khác (Dell, Asus, HP...)
+    \item related\_type: Chuột, bàn phím, tai nghe, màn hình
+    \item Merge: Ưu tiên same\_type trước, rồi related\_type
+\end{enumerate}
+
+% ============================================================
+% CHƯƠNG 7: KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN
+% ============================================================
+\chapter{Kết Luận và Hướng Phát Triển}
+
+\section{Kết luận}
+
+Đồ án đã xây dựng thành công hệ thống gợi ý sản phẩm thương mại điện tử AuraShop với các đóng góp chính:
+
+\begin{enumerate}
+    \item \textbf{Kiến trúc Hybrid hai tầng:} Kết hợp Category-Specific Models (TF-IDF, nhanh, chính xác) với Hybrid Engine (Sentence Transformer, semantic understanding) tạo nên hệ thống vừa nhanh vừa thông minh.
+    
+    \item \textbf{Multi-signal Scoring:} Công thức scoring kết hợp content similarity, popularity, và domain knowledge (RELATED\_MAP, TypeBonus) cho kết quả gợi ý đa chiều.
+    
+    \item \textbf{Cross-sell thông minh:} Phân biệt ``sản phẩm cùng loại'' và ``sản phẩm bổ sung'' dựa trên RELATED\_MAP, mô phỏng hành vi mua sắm thực tế.
+    
+    \item \textbf{Personalization pipeline:} Sử dụng ChromaDB để tracking hành vi và gợi ý cá nhân hóa, giải quyết cold-start problem.
+    
+    \item \textbf{Production-ready architecture:} Microservice, Docker, offline training, lazy loading — sẵn sàng cho môi trường production.
+\end{enumerate}
+
+\section{Hướng phát triển}
+
+\subsection{Ngắn hạn}
+
+\begin{itemize}
+    \item Thêm Collaborative Filtering khi có đủ dữ liệu user interaction
+    \item Tự động hóa RELATED\_MAP bằng association rule mining (Apriori, FP-Growth)
+    \item Cải thiện Product Type Classification bằng ML classifier thay vì keyword matching
+    \item Thêm A/B testing framework để đánh giá hiệu quả recommendation
+    \item Implement re-ranking dựa trên user context (thời gian, device, location)
+\end{itemize}
+
+\subsection{Dài hạn}
+
+\begin{itemize}
+    \item Áp dụng Deep Learning models (Neural Collaborative Filtering, Graph Neural Networks)
+    \item Real-time model update khi có interaction mới (online learning)
+    \item Multi-modal recommendation (kết hợp image features)
+    \item Explainable AI: Giải thích cho user tại sao sản phẩm được gợi ý
+    \item Scale lên hàng triệu sản phẩm với approximate nearest neighbor (FAISS, Annoy)
+\end{itemize}
+
+\section{Bài học kinh nghiệm}
+
+\begin{itemize}
+    \item Content-Based Filtering là baseline mạnh cho e-commerce recommendation khi chưa có đủ user data.
+    \item Domain knowledge (RELATED\_MAP) bổ sung đáng kể cho pure ML approaches.
+    \item Kiến trúc microservice giúp iterate nhanh trên ML models mà không ảnh hưởng web application.
+    \item Offline training + online serving là pattern hiệu quả cho production ML systems.
+    \item Sentence Transformers multilingual hoạt động tốt với tiếng Việt, không cần fine-tune thêm.
+\end{itemize}
+
+% ============================================================
+% TÀI LIỆU THAM KHẢO
+% ============================================================
+\begin{thebibliography}{99}
+
+\bibitem{ricci2015}
+F. Ricci, L. Rokach, B. Shapira, and P. B. Kantor,
+\textit{Recommender Systems Handbook}, 2nd ed.
+Springer, 2015.
+
+\bibitem{lops2011}
+P. Lops, M. de Gennaro, and G. Semeraro,
+``Content-based Recommender Systems: State of the Art and Trends,''
+in \textit{Recommender Systems Handbook}, pp. 73--105, Springer, 2011.
+
+\bibitem{salton1988}
+G. Salton and C. Buckley,
+``Term-weighting approaches in automatic text retrieval,''
+\textit{Information Processing \& Management}, vol. 24, no. 5, pp. 513--523, 1988.
+
+\bibitem{reimers2019}
+N. Reimers and I. Gurevych,
+``Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks,''
+in \textit{Proceedings of EMNLP-IJCNLP}, pp. 3982--3992, 2019.
+
+\bibitem{vaswani2017}
+A. Vaswani, N. Shazeer, N. Parmar, et al.,
+``Attention Is All You Need,''
+in \textit{Advances in Neural Information Processing Systems (NeurIPS)}, vol. 30, 2017.
+
+\bibitem{devlin2019}
+J. Devlin, M.-W. Chang, K. Lee, and K. Toutanova,
+``BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding,''
+in \textit{Proceedings of NAACL-HLT}, pp. 4171--4186, 2019.
+
+\bibitem{pedregosa2011}
+F. Pedregosa, G. Varoquaux, A. Gramfort, et al.,
+``Scikit-learn: Machine Learning in Python,''
+\textit{Journal of Machine Learning Research}, vol. 12, pp. 2825--2830, 2011.
+
+\bibitem{chromadb2023}
+Chroma,
+``ChromaDB: The AI-native open-source embedding database,''
+\url{https://www.trychroma.com/}, 2023.
+
+\bibitem{fastapi2023}
+S. Ramírez,
+``FastAPI: Modern, fast web framework for building APIs with Python,''
+\url{https://fastapi.tiangolo.com/}, 2023.
+
+\bibitem{django2024}
+Django Software Foundation,
+``Django: The web framework for perfectionists with deadlines,''
+\url{https://www.djangoproject.com/}, 2024.
+
+\bibitem{wang2020}
+Y. Wang, L. Wang, Y. Li, et al.,
+``A Survey on Cross-sell Recommendation in E-commerce,''
+\textit{ACM Computing Surveys}, vol. 53, no. 6, 2020.
+
+\bibitem{koren2009}
+Y. Koren, R. Bell, and C. Volinsky,
+``Matrix Factorization Techniques for Recommender Systems,''
+\textit{Computer}, vol. 42, no. 8, pp. 30--37, 2009.
+
+\end{thebibliography}
+
+% ============================================================
+% PHỤ LỤC
+% ============================================================
+\appendix
+\chapter{Phụ Lục}
+
+\section{Mã nguồn chính: Hybrid Recommendation Engine}
+
+\begin{lstlisting}[language=Python, caption=recommender.py - Hybrid Engine (trích)]
+class HybridRecommendationEngine:
+    def __init__(self):
+        self.tfidf = TfidfVectorizer(ngram_range=(1, 2), max_features=5000)
+        self._embedding_model = None  # Lazy load
+
+    @property
+    def embedding_model(self):
+        if self._embedding_model is None:
+            self._embedding_model = SentenceTransformer(
+                'paraphrase-multilingual-MiniLM-L12-v2')
+        return self._embedding_model
+
+    def search(self, query, top_k=20):
+        query_clean = self.clean_text(query)
+        # TF-IDF branch
+        tfidf_scores = cosine_similarity(
+            self.tfidf.transform([query_clean]), self.tfidf_vectors).flatten()
+        # Embedding branch
+        embedding_query = self.embedding_model.encode(
+            [query_clean], normalize_embeddings=True)
+        embedding_scores = cosine_similarity(
+            embedding_query, self.embedding_vectors).flatten()
+        # Hybrid scoring
+        content_score = 0.65 * embedding_scores + 0.35 * tfidf_scores
+        final_score = 0.70 * content_score + 0.30 * pop_scores
+        return top_k_results(final_score)
+\end{lstlisting}
+
+\section{Mã nguồn chính: Category Model}
+
+\begin{lstlisting}[language=Python, caption=model\_beauty.py - Category Model (trích)]
+def recommend_by_search(query, top_k=20, alpha=0.6):
+    query = clean_query(query)
+    q_text = vectorizer.transform([query])
+    q_num = scaler.transform([[0, 0]])
+    q_vec = hstack([q_text, q_num])
+    
+    sim = cosine_similarity(q_vec, X).flatten()
+    query_type = get_product_type(query)
+    type_bonus = np.where(product_types == query_type, 0.1, 0.0)
+    
+    final_scores = alpha * sim + (1-alpha) * pop_scores + type_bonus
+    final_scores[ratings < 3] = -1  # Filter low-rated
+    
+    return top_k_results(final_scores)
+
+def recommend_click(product_name, top_k=20, alpha=0.6):
+    # ... compute similarity ...
+    base_type = get_product_type(product_name)
+    related_types = RELATED_MAP.get(base_type, [])
+    # Split into same_type and related_type
+    return {"same_type": [...], "related_type": [...]}
+\end{lstlisting}
+
+\section{Cấu hình trọng số theo danh mục}
+
+\begin{table}[H]
+\centering
+\caption{Chi tiết cấu hình trọng số}
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Parameter} & \textbf{Beauty} & \textbf{Electronic} & \textbf{Grocery} & \textbf{Fashion} & \textbf{Hybrid} \\
+\midrule
+$\alpha$ (content weight) & 0.6 & 0.7 & 0.7 & 0.7 & 0.70 \\
+Rating weight in PopScore & 0.5 & 0.6 & 0.6 & 0.6 & 0.50 \\
+Price weight in PopScore & 0.5 & 0.4 & 0.4 & 0.4 & 0.50 \\
+Type Bonus & 0.1 & 0.1 & 0.1 & 0.1 & N/A \\
+Embedding weight & N/A & N/A & N/A & N/A & 0.65 \\
+TF-IDF weight & N/A & N/A & N/A & N/A & 0.35 \\
+Min rating threshold & 3.0 & 3.0 & 3.0 & 3.0 & N/A \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\end{document}

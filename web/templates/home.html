@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load price_format %}
+{% block title %}AuraShop - Trang chủ{% endblock %}
+{% block content %}
+<!-- Hero -->
+<section class="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-8 md:p-12 mb-8 text-white">
+    <h1 class="text-3xl font-bold mb-3">Khám phá sản phẩm với AI</h1>
+    <p class="opacity-90 mb-6">Hệ thống gợi ý thông minh dựa trên Content-Based Filtering + Popularity.</p>
+    <form action="/search/" method="GET" class="max-w-lg flex">
+        <input type="text" name="q" placeholder="Bạn đang tìm gì?" class="flex-1 px-4 py-3 rounded-l-lg text-gray-800">
+        <button class="bg-white text-indigo-600 px-6 py-3 rounded-r-lg font-semibold hover:bg-gray-100">Tìm kiếm</button>
+    </form>
+</section>
+
+<!-- Personalized (loaded via JS after login check) -->
+<section id="personalized-section" class="mb-10 hidden">
+    <h2 class="text-xl font-semibold mb-4">🎯 Gợi ý cho bạn</h2>
+    <div id="personalized-grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4"></div>
+</section>
+
+<!-- Categories -->
+<section class="mb-10">
+    <h2 class="text-xl font-semibold mb-4">Danh mục</h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {% for cat in categories %}
+        <a href="/search/?categoryId={{ cat.id }}" class="bg-white rounded-xl p-6 text-center shadow-sm hover:shadow-md transition">
+            <h3 class="font-medium">{{ cat.name }}</h3>
+        </a>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Popular -->
+<section>
+    <h2 class="text-xl font-semibold mb-4">Sản phẩm nổi bật</h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        {% for p in products %}
+        <a href="/product/{{ p.id }}/" class="bg-white rounded-xl shadow-sm hover:shadow-md transition overflow-hidden group">
+            <div class="aspect-square bg-gray-100 overflow-hidden">
+                {% if p.image_url %}<img src="{{ p.image_url }}" class="w-full h-full object-cover group-hover:scale-105 transition" loading="lazy" onerror="this.src='https://placehold.co/300?text=No+Img'">{% endif %}
+            </div>
+            <div class="p-3">
+                <h3 class="text-sm font-medium line-clamp-2 mb-1">{{ p.name }}</h3>
+                {% if p.brand %}<p class="text-xs text-gray-500">{{ p.brand }}</p>{% endif %}
+                <span class="text-red-600 font-bold">{{ p.price|vnd }}₫</span>
+                <div class="text-xs text-yellow-500 mt-1">★ {{ p.rating }} ({{ p.review_count }})</div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
+    try {
+        const r = await fetch('/api/v1/recommendations/personalized/', {
+            headers: {'Authorization': 'Bearer ' + token}
+        });
+        if (!r.ok) return;
+        const data = await r.json();
+        if (data.source !== 'personalized' || !data.results || data.results.length === 0) return;
+
+        const grid = document.getElementById('personalized-grid');
+        const section = document.getElementById('personalized-section');
+
+        function formatPrice(p) {
+            return Math.round(parseFloat(p)).toLocaleString('vi-VN');
+        }
+
+        grid.innerHTML = data.results.map(p => `
+            <a href="/product/${p.id}/" class="bg-white rounded-xl shadow-sm hover:shadow-md transition overflow-hidden group">
+                <div class="aspect-square bg-gray-100 overflow-hidden">
+                    ${p.image_url || p.imageUrl ? `<img src="${p.image_url || p.imageUrl}" class="w-full h-full object-cover group-hover:scale-105 transition" loading="lazy" onerror="this.src='https://placehold.co/300?text=No+Img'">` : ''}
+                </div>
+                <div class="p-3">
+                    <h3 class="text-sm font-medium line-clamp-2 mb-1">${p.name}</h3>
+                    <span class="text-red-600 font-bold">${formatPrice(p.price)}₫</span>
+                    <div class="text-xs text-yellow-500 mt-1">★ ${p.rating || 0}</div>
+                </div>
+            </a>
+        `).join('');
+
+        section.classList.remove('hidden');
+    } catch(e) { console.log('Personalized feed error:', e); }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,24 @@
+# Django
+Django==5.1.4
+djangorestframework==3.15.2
+django-cors-headers==4.6.0
+django-filter==24.3
+
+# Auth
+djangorestframework-simplejwt==5.4.0
+
+# Database
+mysqlclient==2.2.6
+PyMySQL==1.1.1
+
+# HTTP Client (gọi model service)
+httpx==0.28.1
+
+# Vector Database (user tracking / personalization)
+chromadb==0.5.23
+
+# Utilities
+gunicorn==23.0.0
+whitenoise==6.8.2
+python-dotenv==1.0.1
+numpy==1.26.4

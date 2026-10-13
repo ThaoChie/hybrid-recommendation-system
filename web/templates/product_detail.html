@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load price_format %}
+{% block title %}{{ product.name }} - AuraShop{% endblock %}
+{% block content %}
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white rounded-xl p-6 shadow-sm mb-8">
+    <div class="aspect-square bg-gray-100 rounded-lg overflow-hidden">
+        {% if product.image_url %}<img src="{{ product.image_url }}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/500?text=No+Img'">{% endif %}
+    </div>
+    <div>
+        <h1 class="text-2xl font-bold mb-2">{{ product.name }}</h1>
+        {% if product.brand %}<p class="text-gray-500 mb-4">Thương hiệu: <b>{{ product.brand }}</b></p>{% endif %}
+        <div class="text-yellow-500 mb-4">★ {{ product.rating }} ({{ product.review_count }} đánh giá)</div>
+        <div class="mb-6">
+            <span class="text-3xl font-bold text-red-600">{{ product.price|vnd }}₫</span>
+            {% if product.original_price > product.price %}
+            <span class="ml-3 text-gray-400 line-through">{{ product.original_price|vnd }}₫</span>
+            {% endif %}
+        </div>
+        <button onclick="app().track('{{ product.id }}','AddToCart');alert('Đã thêm vào giỏ!')" class="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700">Thêm vào giỏ hàng</button>
+    </div>
+</div>
+
+{% if recommendations %}
+<section>
+    <h2 class="text-xl font-semibold mb-4">Sản phẩm tương tự</h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        {% for p in recommendations %}
+        <a href="/product/{{ p.id }}/" class="bg-white rounded-xl shadow-sm hover:shadow-md transition overflow-hidden group">
+            <div class="aspect-square bg-gray-100 overflow-hidden">
+                {% if p.image_url %}<img src="{{ p.image_url }}" class="w-full h-full object-cover group-hover:scale-105 transition" loading="lazy" onerror="this.src='https://placehold.co/300?text=No+Img'">{% endif %}
+            </div>
+            <div class="p-3">
+                <h3 class="text-sm font-medium line-clamp-2 mb-1">{{ p.name }}</h3>
+                <span class="text-red-600 font-bold">{{ p.price|vnd }}₫</span>
+                <div class="text-xs text-yellow-500 mt-1">★ {{ p.rating }}</div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+{% endblock %}
+{% block scripts %}
+<script>
+// Track product view
+document.addEventListener('DOMContentLoaded', () => { app().track('{{ product.id }}', 'View'); });
+</script>
+{% endblock %}

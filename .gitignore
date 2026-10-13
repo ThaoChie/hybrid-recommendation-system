@@ -1,0 +1,21 @@
+__pycache__/
+*.pyc
+*.pyo
+.env
+*.sqlite3
+venv/
+.venv/
+staticfiles/
+chroma_db/
+.DS_Store
+*.pkl
+model/venv/
+web/chroma_db/
+node_modules/
+
+# Ignore venv and bin
+venv2/
+model/venv2/
+bin/
+obj/
+

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}AuraShop{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>[x-cloak]{display:none!important}</style>
+</head>
+<body class="bg-gray-50 min-h-screen" x-data="app()" x-init="init()">
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-40">
+        <div class="container mx-auto px-4 flex items-center justify-between h-16">
+            <a href="/" class="text-2xl font-bold text-indigo-600">AuraShop</a>
+            <form action="/search/" method="GET" class="flex-1 max-w-xl mx-8">
+                <div class="relative">
+                    <input type="text" name="q" placeholder="Tìm kiếm sản phẩm..." value="{{ query|default:'' }}"
+                        class="w-full pl-4 pr-10 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                    <button type="submit" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-indigo-600">🔍</button>
+                </div>
+            </form>
+            <div class="flex items-center space-x-3">
+                <template x-if="!user">
+                    <button @click="showAuth=true" class="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm hover:bg-indigo-700">Đăng nhập</button>
+                </template>
+                <template x-if="user">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-sm text-gray-600" x-text="user.username"></span>
+                        <button @click="logout()" class="text-sm text-red-500 hover:underline">Thoát</button>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-6">{% block content %}{% endblock %}</main>
+
+    <!-- Auth Modal -->
+    <div x-show="showAuth" x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-black/50" @click.self="showAuth=false">
+        <div class="bg-white rounded-xl p-8 w-full max-w-md" x-data="{tab:'login'}">
+            <div class="flex space-x-4 mb-6 border-b">
+                <button @click="tab='login'" :class="tab==='login'?'border-indigo-600 text-indigo-600':'border-transparent text-gray-500'" class="pb-2 border-b-2 font-medium">Đăng nhập</button>
+                <button @click="tab='register'" :class="tab==='register'?'border-indigo-600 text-indigo-600':'border-transparent text-gray-500'" class="pb-2 border-b-2 font-medium">Đăng ký</button>
+            </div>
+            <form x-show="tab==='login'" @submit.prevent="doLogin($event)" class="space-y-4">
+                <input name="email" type="email" placeholder="Email" required class="w-full px-3 py-2 border rounded-lg">
+                <input name="password" type="password" placeholder="Mật khẩu" required class="w-full px-3 py-2 border rounded-lg">
+                <button class="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700">Đăng nhập</button>
+                <p x-show="authError" class="text-red-500 text-sm" x-text="authError"></p>
+            </form>
+            <form x-show="tab==='register'" @submit.prevent="doRegister($event)" class="space-y-4">
+                <input name="username" placeholder="Username" required class="w-full px-3 py-2 border rounded-lg">
+                <input name="email" type="email" placeholder="Email" required class="w-full px-3 py-2 border rounded-lg">
+                <input name="password" type="password" placeholder="Mật khẩu" required class="w-full px-3 py-2 border rounded-lg">
+                <button class="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700">Đăng ký</button>
+                <p x-show="authError" class="text-red-500 text-sm" x-text="authError"></p>
+            </form>
+        </div>
+    </div>
+
+    <script>
+    const API = '';
+    function app() {
+        return {
+            user: JSON.parse(localStorage.getItem('user') || 'null'),
+            token: localStorage.getItem('token') || '',
+            showAuth: false,
+            authError: '',
+            init() {},
+            async doLogin(e) {
+                const fd = new FormData(e.target);
+                const r = await fetch(API+'/api/v1/auth/login/', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email:fd.get('email'),password:fd.get('password')})});
+                const d = await r.json();
+                if(r.ok){this.user=d.user;this.token=d.tokens.access;localStorage.setItem('user',JSON.stringify(d.user));localStorage.setItem('token',d.tokens.access);this.showAuth=false;this.authError='';location.reload();}
+                else{this.authError=d.error||'Lỗi đăng nhập';}
+            },
+            async doRegister(e) {
+                const fd = new FormData(e.target);
+                const r = await fetch(API+'/api/v1/auth/register/', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({username:fd.get('username'),email:fd.get('email'),password:fd.get('password')})});
+                const d = await r.json();
+                if(r.ok){this.user=d.user;this.token=d.tokens.access;localStorage.setItem('user',JSON.stringify(d.user));localStorage.setItem('token',d.tokens.access);this.showAuth=false;this.authError='';location.reload();}
+                else{this.authError=d.error||JSON.stringify(d);}
+            },
+            logout(){localStorage.removeItem('user');localStorage.removeItem('token');this.user=null;this.token='';location.reload();},
+            async track(productId, type, searchQuery){
+                const headers = {'Content-Type':'application/json'};
+                if(this.token) headers['Authorization']='Bearer '+this.token;
+                fetch(API+'/api/v1/tracking/interaction/', {method:'POST', headers, body:JSON.stringify({product_id:productId,interaction_type:type,search_query:searchQuery||''})});
+            }
+        }
+    }
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
